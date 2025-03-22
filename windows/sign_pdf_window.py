@@ -39,8 +39,9 @@ def sign_pdf_window(
             dpg.configure_item(f"select_usb_{tag}", items=usb_devices)
             time.sleep(0.1)
 
-    thread = threading.Thread(target=update_usb_devices_thread, args=(stop_event,))
-    thread.start()
+    usb_drives_thread = threading.Thread(
+        target=update_usb_devices_thread, args=(stop_event,)
+    )
 
     def select_usb_drive_callback(sender, app_data):
         nonlocal selected_device
@@ -164,5 +165,7 @@ def sign_pdf_window(
             height=50,
             width=380,
         )
+
+    usb_drives_thread.start()
 
     return tag

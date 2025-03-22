@@ -1,3 +1,5 @@
+import threading
+import time
 import dearpygui.dearpygui as dpg
 
 from lib.crypt import *
@@ -22,6 +24,19 @@ def main():
     available_usb_devices = []
     selected_usb_device = None
 
+    stop_event = threading.Event()
+
+    def refresh_usb_drives_thread(stop_event: threading.Event):
+        nonlocal available_usb_devices
+        while not stop_event.is_set():
+            available_usb_devices = get_usb_drives()
+            dpg.configure_item("select_usb", items=available_usb_devices)
+            time.sleep(0.1)
+
+    usb_drives_thread = threading.Thread(
+        target=refresh_usb_drives_thread, args=(stop_event,)
+    )
+
     def enter_pin_callback(window_tag: str, input_pin: str):
         if len(input_pin) < 4:
             error_window(
@@ -37,11 +52,6 @@ def main():
             default_value=f"PIN is set ({'*' * len(input_pin)})",
             color=(0, 255, 0, 255),
         )
-
-    def refresh_usb_drives():
-        nonlocal available_usb_devices
-        available_usb_devices = get_usb_drives()
-        dpg.configure_item("select_usb", items=available_usb_devices)
 
     def select_usb_drive_callback(sender, app_data):
         nonlocal selected_usb_device
@@ -102,6 +112,7 @@ def main():
         no_scrollbar=True,
         no_bring_to_front_on_focus=True,
         pos=[0, 0],
+        on_close=lambda: stop_event.set(),
     ):
         dpg.add_text("Generate Signing Key")
         dpg.add_button(
@@ -140,15 +151,14 @@ def main():
             callback=generate_key_callback,
         )
 
+    usb_drives_thread.start()
+
     dpg.set_viewport_resize_callback(resize_callback)
     resize_callback(None, None)
 
     dpg.show_viewport()
-
-    while dpg.is_dearpygui_running():
-        refresh_usb_drives()
-        dpg.render_dearpygui_frame()
-
+    dpg.start_dearpygui()
+    stop_event.set()
     dpg.destroy_context()
 
 
