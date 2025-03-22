@@ -1,5 +1,7 @@
 import dearpygui.dearpygui as dpg
 
+from const import *
+from lib.crypt import *
 from lib.usb import get_usb_drives
 from windows.input_pin_window import input_pin_window
 from windows.error_window import error_window
@@ -58,12 +60,50 @@ def main():
             error_window("Please select a USB drive first!")
             return
 
+        dpg.configure_item(
+            "generate",
+            label="Generating...",
+            enabled=False,
+        )
+
+        private_key, public_key = generate_rsa_key_pair()
+        aes_key = hash_string(pin)
+        private_key_nonce, encrypted_private_key, private_key_tag = (
+            encrypt_data_with_aes(private_key, aes_key)
+        )
+
+        private_key_path = f"{selected_usb_device.mount_point}/{PRIVATE_KEY_DIR}{PRIVATE_KEY_FILENAME}{ENCRYPTED_EXTENSION}"
+        with open(
+            private_key_path,
+            "wb",
+        ) as file:
+            file.write(
+                merge_cipher_data(
+                    private_key_nonce, encrypted_private_key, private_key_tag
+                )
+            )
+
+        public_key_path = f"{PUBLIC_KEY_DIR}/{PUBLIC_KEY_FILENAME}"
+        with open(
+            public_key_path,
+            "wb",
+        ) as file:
+            file.write(public_key)
+
         success_window(
-            f"Key generated successfully at the \n{selected_usb_device} drive!"
+            f"Private key generated successfully at \nthe {selected_usb_device} drive!\n\nPublic key saved at\n{public_key_path}"
+        )
+
+        dpg.configure_item(
+            "generate",
+            label="Generate Key",
+            enabled=True,
         )
 
     dpg.create_context()
-    dpg.create_viewport(title="Generate Signing Key", width=320, height=300)
+    dpg.create_viewport(
+        title="Generate Signing Key", width=320, height=300, resizable=False
+    )
     dpg.setup_dearpygui()
 
     monitor_width = dpg.get_viewport_client_width()
@@ -76,6 +116,7 @@ def main():
         no_move=True,
         no_title_bar=True,
         no_scrollbar=True,
+        no_bring_to_front_on_focus=True,
         pos=[0, 0],
     ):
         dpg.add_text("Generate Signing Key")
@@ -109,6 +150,7 @@ def main():
 
         dpg.add_button(
             label="Generate Key",
+            tag="generate",
             width=300,
             height=50,
             callback=generate_key_callback,

@@ -6,6 +6,7 @@ def success_window(message: str = "Success!") -> str:
     with dpg.window(
         label="Success",
         tag=tag,
+        modal=True,
     ):
         dpg.add_text(message, color=(0, 255, 0, 255))
         dpg.add_button(
