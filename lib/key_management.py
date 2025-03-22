@@ -19,7 +19,7 @@ def generate_and_save_keys(device_path: str, pin: str) -> tuple[str, str]:
 
 def encrypt_and_save_private_key(pin: str, device_path: str, private_key: bytes):
     aes_key = hash_string(pin)
-    private_key_nonce, encrypted_private_key, private_key_tag = encrypt_data_with_aes(
+    private_key_nonce, private_key_tag, encrypted_private_key = encrypt_data_with_aes(
         private_key, aes_key
     )
 
@@ -62,8 +62,10 @@ def read_and_decrypt_private_key(pin: str, device_path: str) -> bytes:
     return None
 
 
-def read_public_key() -> bytes:
-    with open(f"{PUBLIC_KEY_DIR}/{PUBLIC_KEY_FILENAME}", "rb") as file:
+def read_public_key(path: str = None) -> bytes:
+    if not path:
+        path = f"{PUBLIC_KEY_DIR}/{PUBLIC_KEY_FILENAME}"
+    with open(path, "rb") as file:
         return file.read()
     return None
 

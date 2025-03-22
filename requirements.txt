@@ -1,3 +1,2 @@
 dearpygui==2.0.0
 pycryptodome==3.22.0
-PyPDF2==3.0.1

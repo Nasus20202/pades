@@ -38,7 +38,9 @@ def main():
             label="Sign PDF",
             width=800,
             height=200,
-            callback=lambda: sign_pdf_window(position=(10, 10)),
+            callback=lambda: sign_pdf_window(
+                position=(10, 10), popup_position=(50, 50)
+            ),
         )
 
         dpg.add_spacer(height=50)
@@ -47,7 +49,9 @@ def main():
             label="Verify Signature",
             width=800,
             height=200,
-            callback=lambda: verify_signature_window(position=(410, 10)),
+            callback=lambda: verify_signature_window(
+                position=(410, 10), popup_position=(460, 50)
+            ),
         )
 
     dpg.set_viewport_resize_callback(resize_callback)

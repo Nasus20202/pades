@@ -1,7 +1,8 @@
 from Crypto.PublicKey import RSA
 import Crypto.Hash.SHA256 as SHA256
 from Crypto.Signature import pss
-from PyPDF2 import PdfReader, PdfWriter
+
+SIGNATURE_LENGTH = 512
 
 
 def sign_pdf(file_path: str, private_key: bytes, signed_file_path=None):
@@ -9,27 +10,28 @@ def sign_pdf(file_path: str, private_key: bytes, signed_file_path=None):
         signed_file_path = file_path.replace(".pdf", "_signed.pdf")
 
     with open(file_path, "rb") as f:
-        pdf_reader = PdfReader(f)
-        pdf_writer = PdfWriter()
-        pdf_writer.append_pages_from_reader(pdf_reader)
         data = f.read()
 
     rsa_key = RSA.import_key(private_key)
     signature = pss.new(rsa_key).sign(SHA256.new(data))
 
-    pdf_writer.add_metadata({"/Signature": signature.hex()})
     with open(signed_file_path, "wb") as f:
-        pdf_writer.write(f)
+        f.write(data)
+        f.write(signature)
 
 
 def verify_pdf(file_path: str, public_key: bytes) -> bool:
     with open(file_path, "rb") as f:
-        pdf_reader = PdfReader(f)
         data = f.read()
 
-    rsa_key = RSA.import_key(public_key)
-    signature = pdf_reader.metadata.get("/Signature")
-    if signature is None:
-        return False
+    pdf_data = data[:-SIGNATURE_LENGTH]
+    signature = data[-SIGNATURE_LENGTH:]
 
-    return pss.new(rsa_key).verify(SHA256.new(data), signature)
+    rsa_key = RSA.import_key(public_key)
+    pdf_hash = SHA256.new(pdf_data)
+    verifier = pss.new(rsa_key)
+    try:
+        verifier.verify(pdf_hash, signature)
+        return True
+    except (ValueError, TypeError):
+        return False

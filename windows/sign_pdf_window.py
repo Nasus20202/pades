@@ -13,11 +13,9 @@ from windows.error_window import error_window
 from windows.input_pin_window import input_pin_window
 
 
-popup_position = (50, 50)
-
-
 def sign_pdf_window(
     position: tuple[int, int] = (0, 0),
+    popup_position=(0, 0),
     width=400,
     height=550,
 ) -> str:
@@ -119,6 +117,7 @@ def sign_pdf_window(
         dpg.add_listbox(
             items=[],
             tag=f"select_usb_{tag}",
+            width=380,
             callback=select_usb_drive_callback,
         )
         dpg.add_text(
@@ -131,7 +130,9 @@ def sign_pdf_window(
 
         dpg.add_button(
             label="Insert PIN",
-            callback=lambda: input_pin_window(enter_pin_callback, position=(10, 10)),
+            width=380,
+            height=50,
+            callback=lambda: input_pin_window(enter_pin_callback, position=(100, 150)),
         )
         dpg.add_text(
             default_value="PIN is not entered",
@@ -144,6 +145,8 @@ def sign_pdf_window(
         dpg.add_text("Select a PDF file to sign:")
         dpg.add_button(
             label="Select PDF",
+            width=380,
+            height=50,
             callback=lambda: dpg.show_item(f"select_pdf_{tag}"),
         )
         dpg.add_text(

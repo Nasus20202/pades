@@ -55,8 +55,7 @@ def main():
         )
 
     def generate_key_callback(sender, app_data):
-        nonlocal pin
-        nonlocal selected_usb_device
+        nonlocal pin, selected_usb_device
         if not pin:
             error_window("Please set a PIN first!", position=popup_position)
             return

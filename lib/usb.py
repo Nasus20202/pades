@@ -14,23 +14,19 @@ class USBDrive:
 def get_usb_drives() -> list[USBDrive]:
     mounted_usb_drives = []
 
-    try:
-        with open("/proc/mounts", "r") as f:
-            mounts = f.readlines()
+    with open("/proc/mounts", "r") as f:
+        mounts = f.readlines()
 
-        # Iterate over each mounted filesystem
-        for mount in mounts:
-            parts = mount.split()
-            usb_drive = USBDrive(
-                parts[0],
-                parts[1],
-            )
+    # Iterate over each mounted filesystem
+    for mount in mounts:
+        parts = mount.split()
+        usb_drive = USBDrive(
+            parts[0],
+            parts[1],
+        )
 
-            # Check if the device is a USB drive
-            if "usb" in usb_drive.device or "/media/" in usb_drive.mount_point:
-                mounted_usb_drives.append(usb_drive)
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
+        # Check if the device is a USB drive
+        if "usb" in usb_drive.device or "/media/" in usb_drive.mount_point:
+            mounted_usb_drives.append(usb_drive)
 
     return mounted_usb_drives
