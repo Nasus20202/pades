@@ -7,6 +7,8 @@ from windows.input_pin_window import input_pin_window
 from windows.error_window import error_window
 from windows.success_window import success_window
 
+popup_position = (10, 50)
+
 
 def resize_callback(sender, app_data):
     viewport_width = dpg.get_viewport_width()
@@ -22,7 +24,9 @@ def main():
 
     def enter_pin_callback(window_tag: str, input_pin: str):
         if len(input_pin) < 4:
-            error_window("PIN must be at least 4 characters long!")
+            error_window(
+                "PIN must be at least 4 characters long!", position=popup_position
+            )
             return
         dpg.delete_item(window_tag)
 
@@ -46,7 +50,7 @@ def main():
         ][0]
         dpg.configure_item(
             "usb_status",
-            default_value=f"USB is set to {selected_usb_device}",
+            default_value=f"Selected USB device: {selected_usb_device}",
             color=(0, 255, 0, 255),
         )
 
@@ -54,10 +58,10 @@ def main():
         nonlocal pin
         nonlocal selected_usb_device
         if not pin:
-            error_window("Please set a PIN first!")
+            error_window("Please set a PIN first!", position=popup_position)
             return
         if not selected_usb_device:
-            error_window("Please select a USB drive first!")
+            error_window("Please select a USB drive first!", position=popup_position)
             return
 
         dpg.configure_item(
@@ -91,7 +95,8 @@ def main():
             file.write(public_key)
 
         success_window(
-            f"Private key generated successfully at \nthe {selected_usb_device} drive!\n\nPublic key saved at\n{public_key_path}"
+            f"Private key generated successfully at \nthe {selected_usb_device} drive!\n\nPublic key saved at\n{public_key_path}",
+            position=popup_position,
         )
 
         dpg.configure_item(
@@ -123,7 +128,7 @@ def main():
         dpg.add_button(
             label="Setup PIN",
             width=300,
-            callback=lambda: input_pin_window(enter_pin_callback),
+            callback=lambda: input_pin_window(enter_pin_callback, position=(10, 10)),
         )
         dpg.add_text(
             default_value="PIN is not set",
@@ -141,7 +146,7 @@ def main():
             callback=select_usb_drive_callback,
         )
         dpg.add_text(
-            default_value="USB is not set",
+            default_value="USB device is not selected",
             tag="usb_status",
             color=(255, 0, 0, 255),
         )

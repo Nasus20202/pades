@@ -1,12 +1,19 @@
 import dearpygui.dearpygui as dpg
 
 
-def input_pin_window(enter_pin_callback: callable) -> str:
+def input_pin_window(
+    enter_pin_callback: callable,
+    position: tuple[int, int] = (0, 0),
+    width=216,
+    height=0,
+) -> str:
     tag = f"input_pin_{dpg.generate_uuid()}"
     with dpg.window(
         label="Input Pin",
         tag=tag,
-        width=216,
+        width=width,
+        height=height,
+        pos=position,
     ):
         dpg.add_input_text(
             tag=f"{tag}_pin",
