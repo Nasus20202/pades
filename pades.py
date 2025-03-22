@@ -47,7 +47,7 @@ def main():
             label="Verify Signature",
             width=800,
             height=200,
-            callback=lambda: verify_signature_window(position=(10, 10)),
+            callback=lambda: verify_signature_window(position=(410, 10)),
         )
 
     dpg.set_viewport_resize_callback(resize_callback)

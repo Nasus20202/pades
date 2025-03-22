@@ -1,7 +1,7 @@
 import dearpygui.dearpygui as dpg
 
-from const import *
 from lib.crypt import *
+from lib.key_management import generate_and_save_keys
 from lib.usb import get_usb_drives
 from windows.input_pin_window import input_pin_window
 from windows.error_window import error_window
@@ -70,29 +70,9 @@ def main():
             enabled=False,
         )
 
-        private_key, public_key = generate_rsa_key_pair()
-        aes_key = hash_string(pin)
-        private_key_nonce, encrypted_private_key, private_key_tag = (
-            encrypt_data_with_aes(private_key, aes_key)
+        _, public_key_path = generate_and_save_keys(
+            selected_usb_device.mount_point, pin
         )
-
-        private_key_path = f"{selected_usb_device.mount_point}/{PRIVATE_KEY_DIR}{PRIVATE_KEY_FILENAME}{ENCRYPTED_EXTENSION}"
-        with open(
-            private_key_path,
-            "wb",
-        ) as file:
-            file.write(
-                merge_cipher_data(
-                    private_key_nonce, encrypted_private_key, private_key_tag
-                )
-            )
-
-        public_key_path = f"{PUBLIC_KEY_DIR}/{PUBLIC_KEY_FILENAME}"
-        with open(
-            public_key_path,
-            "wb",
-        ) as file:
-            file.write(public_key)
 
         success_window(
             f"Private key generated successfully at \nthe {selected_usb_device} drive!\n\nPublic key saved at\n{public_key_path}",
