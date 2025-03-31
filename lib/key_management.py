@@ -1,8 +1,5 @@
-"""!
-@package key_management
-This module contains functions related to key management.
-"""
-
+## @file key_management.py
+# This module contains functions related to key management.
 import os
 
 from lib.crypt import *

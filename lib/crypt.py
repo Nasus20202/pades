@@ -1,7 +1,5 @@
-"""!
-@package crypt
-This module contains cryptographic functions for hashing, RSA key generation, AES encryption and decryption.
-"""
+## @file crypt.py
+# This module contains cryptographic functions for hashing, RSA key generation, AES encryption and decryption.
 
 import Crypto.PublicKey.RSA as RSA
 import Crypto.Hash.SHA256 as SHA256

@@ -1,3 +1,6 @@
+## @file generate_signing_key.py
+# This module represents the application to generate a signing key, encrypt it with a PIN, and save it to the USB drive.
+
 import threading
 import time
 import dearpygui.dearpygui as dpg
@@ -9,10 +12,15 @@ from windows.input_pin_window import input_pin_window
 from windows.error_window import error_window
 from windows.success_window import success_window
 
+## @var popup_position
+# The position of the popup windows.
 popup_position = (10, 50)
 
 
-def resize_callback(sender, app_data):
+def resize_callback():
+    """!
+    Callback function to resize the main window to the size of the viewport.
+    """
     viewport_width = dpg.get_viewport_width()
     viewport_height = dpg.get_viewport_height()
     dpg.set_item_width("main_window", viewport_width)
@@ -20,6 +28,9 @@ def resize_callback(sender, app_data):
 
 
 def main():
+    """!
+    Entrypoint of the application.
+    """
     pin = None
     available_usb_devices = []
     selected_usb_device = None

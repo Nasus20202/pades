@@ -1,3 +1,6 @@
+## @file pades.py
+# This module represents the application to sign and verify PDF files.
+
 import dearpygui.dearpygui as dpg
 
 from lib.usb import get_usb_drives
@@ -5,7 +8,10 @@ from windows.sign_pdf_window import sign_pdf_window
 from windows.verify_signature_window import verify_signature_window
 
 
-def resize_callback(sender, app_data):
+def resize_callback():
+    """!
+    Callback function to resize the main window to the size of the viewport.
+    """
     viewport_width = dpg.get_viewport_width()
     viewport_height = dpg.get_viewport_height()
     dpg.set_item_width("main_window", viewport_width)
@@ -13,6 +19,9 @@ def resize_callback(sender, app_data):
 
 
 def main():
+    """!
+    Entrypoint of the application.
+    """
     dpg.create_context()
     dpg.create_viewport(title="PAdES", width=820, height=600, resizable=False)
     dpg.setup_dearpygui()
