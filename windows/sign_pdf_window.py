@@ -1,3 +1,5 @@
+## @file sign_pdf_window.py
+# This module contains the function to create a window to sign a PDF file.
 import dearpygui.dearpygui as dpg
 import threading
 import time
@@ -19,6 +21,16 @@ def sign_pdf_window(
     width=400,
     height=550,
 ) -> str:
+    """!
+    Create and display a window to sign a PDF file.
+
+    @param position: The position of the window.
+    @param popup_position: The position of the popup windows.
+    @param width: The width of the window.
+    @param height: The height of the window.
+
+    @return The tag of the created window.
+    """
     tag = f"sign_pdf_{dpg.generate_uuid()}"
 
     usb_devices = []

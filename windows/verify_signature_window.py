@@ -1,3 +1,5 @@
+## @file verify_signature_window.py
+# This module contains the function to create a window to verify the signature of a PDF file.
 import dearpygui.dearpygui as dpg
 
 from lib.key_management import read_public_key
@@ -12,6 +14,16 @@ def verify_signature_window(
     width=400,
     height=550,
 ) -> str:
+    """!
+    Create and display a window to verify the signature of a PDF file.
+
+    @param position: The position of the window.
+    @param popup_position: The position of the popup windows.
+    @param width: The width of the window.
+    @param height: The height of the window.
+
+    @return The tag of the created window.
+    """
     tag = f"verify_signature_{dpg.generate_uuid()}"
 
     selected_pdf_file = None

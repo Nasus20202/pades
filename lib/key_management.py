@@ -1,9 +1,15 @@
 ## @file key_management.py
 # This module contains functions related to key management.
+"""!
+@package key_management
+This module contains functions related to key management.
+"""
+
 import os
 
 from lib.crypt import *
 
+## @anchor globals
 ## @var PRIVATE_KEY_DIR
 # The directory where the private key is stored on the device.
 PRIVATE_KEY_DIR = ""
@@ -15,7 +21,7 @@ PRIVATE_KEY_FILENAME = "private_key.pem"
 ENCRYPTED_EXTENSION = ".aes"
 ## @var PUBLIC_KEY_DIR
 # The directory where the public key is stored (current working directory).
-PUBLIC_KEY_DIR: str = os.getcwd()
+PUBLIC_KEY_DIR = os.getcwd()
 ## @var PUBLIC_KEY_FILENAME
 # The filename of the public key.
 PUBLIC_KEY_FILENAME = "public_key.pub"
@@ -23,7 +29,7 @@ PUBLIC_KEY_FILENAME = "public_key.pub"
 
 def generate_and_save_keys(device_path: str, pin: str) -> tuple[str, str]:
     """!
-    Generate a RSA key pair and save it to the @ref PUBLIC_KEY_DIR and the private key to the device_path.
+    Generate a RSA key pair and save it to the @link globals PUBLIC_KEY_DIR @endlink and the private key to the device.
 
     @param device_path: The path to the device where the private key should be saved.
     @param pin: The pin to encrypt the private key with.
@@ -39,7 +45,7 @@ def generate_and_save_keys(device_path: str, pin: str) -> tuple[str, str]:
 
 def encrypt_and_save_private_key(pin: str, device_path: str, private_key: bytes) -> str:
     """!
-    Encrypt the private key with the pin and save it to the device_path.
+    Encrypt the private key with the pin and save it to the device.
 
     @param pin: The pin to encrypt the private key with.
     @param device_path: The path to the device where the private key should be saved.
@@ -67,7 +73,7 @@ def encrypt_and_save_private_key(pin: str, device_path: str, private_key: bytes)
 
 def save_public_key(public_key: bytes) -> str:
     """!
-    Save the public key to the @ref PUBLIC_KEY_DIR under @ref PUBLIC_KEY_FILENAME name.
+    Save the public key to the @link globals PUBLIC_KEY_DIR @endlink under @link globals PUBLIC_KEY_FILENAME @endlink name.
 
     @param public_key: The public key to save.
 
@@ -84,8 +90,8 @@ def save_public_key(public_key: bytes) -> str:
 
 def read_and_decrypt_private_key(pin: str, device_path: str) -> bytes:
     """!
-    Read the private key from the device_path and decrypt it with the pin.
-    The filename of the private key is @ref PRIVATE_KEY_FILENAME with @ref ENCRYPTED_EXTENSION.
+    Read the private key from the device and decrypt it with the pin.
+    The filename of the private key is @link globals PRIVATE_KEY_FILENAME @endlink with @link globals ENCRYPTED_EXTENSION @endlink.
 
     @param pin: The pin to decrypt the private key with.
     @param device_path: The path to the device where the private key is stored.
@@ -110,7 +116,7 @@ def read_and_decrypt_private_key(pin: str, device_path: str) -> bytes:
 def read_public_key(path: str = None) -> bytes:
     """!
     Read the public key from the path.
-    The default path is @ref PUBLIC_KEY_DIR with @ref PUBLIC_KEY_FILENAME.
+    The default path is @link globals PUBLIC_KEY_DIR @endlink with @link globals PUBLIC_KEY_FILENAME @endlink.
 
     @param path: The path to the public key.
 
@@ -125,7 +131,8 @@ def read_public_key(path: str = None) -> bytes:
 
 def check_if_directory_contains_keys(device_path: str) -> bool:
     """!
-    Check if the device_path contains the private key and the @ref PUBLIC_KEY_DIR contains the public key with @ref PUBLIC_KEY_FILENAME.
+    Check if the device contains the private key
+    and the @link globals PUBLIC_KEY_DIR @endlink contains the public key with @link globals PUBLIC_KEY_FILENAME @endlink.
 
     @param device_path: The path to the device.
 

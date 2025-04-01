@@ -17,7 +17,7 @@ from windows.success_window import success_window
 popup_position = (10, 50)
 
 
-def resize_callback():
+def resize_callback(sender, app_data):
     """!
     Callback function to resize the main window to the size of the viewport.
     """
